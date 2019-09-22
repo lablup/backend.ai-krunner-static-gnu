@@ -14,11 +14,14 @@ RUN PYVER_MM="$(echo $PYTHON_VERSION | cut -d. -f1).$(echo $PYTHON_VERSION | cut
     mkdir -p ${PREFIX}/lib/python${PYVER_MM}/site-packages/ai/backend/kernel && \
     mkdir -p ${PREFIX}/lib/python${PYVER_MM}/site-packages/ai/backend/helpers
 
+COPY ttyd_linux.x86_64.bin ${PREFIX}/bin/ttyd
+RUN chmod +x ${PREFIX}/bin/ttyd
+
 # Build the image archive
 RUN cd ${PREFIX}; \
     tar cJf /root/image.tar.xz ./*
 
-LABEL ai.backend.krunner.version=1
+LABEL ai.backend.krunner.version=2
 CMD ["${PREFIX}/bin/python"]
 
 # vim: ft=dockerfile
