@@ -10,8 +10,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		netbase \
 	&& rm -rf /var/lib/apt/lists/*
 
-ENV GPG_KEY 0D96DF4D4110E5C43FBFB17F2D347EA6AA65421D
-ENV PYTHON_VERSION 3.6.8
+ENV GPG_KEY E3FF2839C048B25C084DEBE9B26995E310250568
+ENV PYTHON_VERSION 3.8.2
 
 RUN mkdir -p ${PREFIX}; \
     echo "${PREFIX}/lib" > /etc/ld.so.conf.d/backendai.conf && \
@@ -96,7 +96,8 @@ RUN cd ${PREFIX}/bin \
 	&& ln -s python3-config python-config
 
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
-ENV PYTHON_PIP_VERSION 19.1.1
+ENV PYTHON_PIP_VERSION 20.0.2
+ENV PYTHON_SETUPTOOLS_VERSION 46.0.0
 
 RUN set -ex; \
 	\
@@ -117,6 +118,7 @@ RUN set -ex; \
 		"pip==$PYTHON_PIP_VERSION" \
 	; \
 	pip --version; \
+	pip install -U "setuptools==${PYTHON_SETUPTOOLS_VERSION}"; \
 	\
 	find ${PREFIX} -depth \
 		\( \

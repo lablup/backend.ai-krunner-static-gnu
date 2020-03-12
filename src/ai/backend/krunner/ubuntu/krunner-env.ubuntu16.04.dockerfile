@@ -21,7 +21,7 @@ RUN chmod +x ${PREFIX}/bin/ttyd
 RUN cd ${PREFIX}; \
     tar cJf /root/image.tar.xz ./*
 
-LABEL ai.backend.krunner.version=2
+LABEL ai.backend.krunner.version=3
 CMD ["${PREFIX}/bin/python"]
 
 # vim: ft=dockerfile
