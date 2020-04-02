@@ -8,11 +8,12 @@ import pkg_resources
 import click
 
 
-distro = 'ubuntu16.04'
+default_distro = 'ubuntu16.04'
 
 
 @click.command()
-def main():
+@click.argument('distro', default=default_distro)
+def main(distro):
     '''
     Build the kernel runner environment containers and tar archives which provides the /opt/backend.ai
     volume to all other kernel contaienrs.
