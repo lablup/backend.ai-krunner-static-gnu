@@ -4,6 +4,7 @@ ARG PREFIX=/opt/backend.ai
 
 ENV PATH=${PREFIX}/bin:$PATH
 ENV LANG=C.UTF-8
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
 		ca-certificates \
