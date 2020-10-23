@@ -1,6 +1,22 @@
 # backend.ai-krunner-ubuntu
 Backend.AI Kernel Runner Package for Ubuntu-based Kernels
 
+## How to read below
+
+* `{distro}` is a string like `ubuntu`, `centos`, `alpine`, etc.
+* `{distro-version}` is a string like `ubuntu18.04`, `centos7.6`, `alpine3.10`, etc.
+
+## Development
+
+```console
+$ git clone https://github.com/lablup/backend.ai-krunner-{distro} krunner-{distro}
+$ cd krunner-{distro}
+$ pyenv virtualenv 3.8.6 venv-krunner  # you may share the same venv with other krunner projects
+$ pyenv local venv-krunner
+$ pip install -U pip setuptools
+$ pip install -U click -e .
+```
+
 ## How to update
 
 1. Modify Dockerfile and/or other contents.
@@ -14,4 +30,5 @@ Backend.AI Kernel Runner Package for Ubuntu-based Kernels
 7. `python setup.py sdist bdist_wheel`
 8. `twine upload dist/*`
 
-`{distro-version}` is a string like `ubuntu18.04`, `centos7.6`, `alpine3.10`, etc.
+Note that `src/ai/backend/krunner/{distro}/krunner-version.{distro-version}.txt` files are
+overwritten by the build script from the label.
