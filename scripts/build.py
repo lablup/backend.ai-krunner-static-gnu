@@ -1,4 +1,5 @@
 import json
+import os
 import secrets
 import subprocess
 from pathlib import Path
@@ -19,7 +20,16 @@ def main(distro):
     volume to all other kernel contaienrs.
     '''
     base_path = Path(pkg_resources.resource_filename('ai.backend.krunner.ubuntu', '.'))
-    click.secho(f'Building Python for krunner for {distro}', fg='yellow', bold=True)
+    os.environ['DOCKER_BUILDKIT'] = '1'
+    if (base_path / f'krunner-wheels.{distro}.dockerfile').exists():
+        click.secho(f'Building Python wheels for krunner for {distro}', fg='yellow', bold=True)
+        subprocess.run([
+            'docker', 'build',
+            '-f', f'krunner-wheels.{distro}.dockerfile',
+            '-t', f'lablup/backendai-krunner-wheels:{distro}',
+            '.'
+        ], cwd=base_path, check=True)
+    click.secho(f'Bundling static Python for krunner for {distro}', fg='yellow', bold=True)
     subprocess.run([
         'docker', 'build',
         '-f', f'krunner-python.{distro}.dockerfile',
