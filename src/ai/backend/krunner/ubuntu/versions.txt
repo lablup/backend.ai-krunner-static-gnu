@@ -1,4 +1,1 @@
 static-gnu
-ubuntu16.04
-ubuntu18.04
-ubuntu20.04
