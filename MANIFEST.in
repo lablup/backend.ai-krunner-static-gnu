@@ -1,1 +1,1 @@
-include src/ai/backend/krunner/ubuntu/*
+include src/ai/backend/krunner/static_gnu/*
