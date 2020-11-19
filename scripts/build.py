@@ -19,7 +19,7 @@ def main(distro):
     Build the kernel runner environment containers and tar archives which provides the /opt/backend.ai
     volume to all other kernel contaienrs.
     '''
-    base_path = Path(pkg_resources.resource_filename('ai.backend.krunner.ubuntu', '.'))
+    base_path = Path(pkg_resources.resource_filename('ai.backend.krunner.static_gnu', '.'))
     os.environ['DOCKER_BUILDKIT'] = '1'
     if (base_path / f'krunner-wheels.{distro}.dockerfile').exists():
         click.secho(f'Building Python wheels for krunner for {distro}', fg='yellow', bold=True)

@@ -2,8 +2,9 @@ FROM ubuntu:18.04
 
 ARG PREFIX=/opt/backend.ai
 
-ENV PATH=${PREFIX}/bin:$PATH
-ENV LANG=C.UTF-8
+ENV PATH=${PREFIX}/bin:$PATH \
+    PYTHON_VERSION=3.8.6 \
+    LANG=C.UTF-8
 
 RUN apt-get update \
     && apt-get install -y \
