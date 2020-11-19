@@ -9,7 +9,7 @@ import pkg_resources
 import click
 
 
-default_distro = 'ubuntu16.04'
+default_distro = 'static-gnu'
 
 
 @click.command()
