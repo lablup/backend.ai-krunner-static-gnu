@@ -18,6 +18,7 @@ RUN if test ! -f "${PREFIX}/bin/python" -a ! -h "${PREFIX}/bin/python" ; then \
     fi
 
 COPY ttyd_linux.x86_64.bin ${PREFIX}/bin/ttyd
+COPY licenses/* ${PREFIX}/licenses/wheels/
 RUN chmod +x ${PREFIX}/bin/ttyd
 
 # Build the image archive
