@@ -27,6 +27,8 @@ RUN <<-EOF
     tar -I zstd -xC . --strip-components=1 -f python.tar.zst
     mv /root/install/* ${PREFIX}/
     mv /root/licenses ${PREFIX}/
+    # aarch64 version does not have pip installed...
+    ${PREFIX}/bin/python3 -m ensurepip
     rm -f python.tar.zst
 EOF
 
