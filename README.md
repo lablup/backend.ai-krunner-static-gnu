@@ -1,6 +1,11 @@
 # backend.ai-krunner-static-gnu
 Backend.AI Kernel Runner Package for glibc-based Kernels
 
+## Notice about source distribution
+
+This package is to distribute prebuilt binaries, so the source distribution does not have prebuilt
+binaries and does not work as intended.  Just refer this repository on how we build stuffs.
+
 ## How to read below
 
 * `{distro}` is a string like `static-gnu`, `static-musl`, etc. depending on which repository you are in.
@@ -12,7 +17,7 @@ Backend.AI Kernel Runner Package for glibc-based Kernels
 ```console
 $ git clone https://github.com/lablup/backend.ai-krunner-{distro} krunner-{distro}
 $ cd krunner-{distro}
-$ pyenv virtualenv 3.8.6 venv-krunner  # you may share the same venv with other krunner projects
+$ pyenv virtualenv 3.9.6 venv-krunner  # you may share the same venv with other krunner projects
 $ pyenv local venv-krunner
 $ pip install -U pip setuptools
 $ pip install -U click -e .
