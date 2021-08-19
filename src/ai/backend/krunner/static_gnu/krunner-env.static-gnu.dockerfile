@@ -29,7 +29,7 @@ RUN apt-get update && apt-get install -y xz-utils
 RUN cd ${PREFIX}; \
     tar cJf /root/image.tar.xz ./*
 
-LABEL ai.backend.krunner.version=7
+LABEL ai.backend.krunner.version=8
 CMD ["${PREFIX}/bin/python"]
 
 # vim: ft=dockerfile
