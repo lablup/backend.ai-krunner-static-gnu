@@ -5,6 +5,7 @@ on: [push]
 jobs:
 
   sdist:
+    if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
     runs-on: ubuntu-20.04
     steps:
     - name: Checkout
@@ -30,6 +31,7 @@ jobs:
 
 
   bdist_wheel:
+    if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
     runs-on: ${{ matrix.os }}
 
     strategy:
