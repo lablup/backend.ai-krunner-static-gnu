@@ -62,6 +62,7 @@ jobs:
         # for host env
         python -m pip install -U pip setuptools wheel
         python -m pip install -U -r requirements/build.txt
+        python -m pip install -U -e .
         # for arch-specific env
         docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws ${{ env.img }} \
           ${{ env.py }} -m pip install -U pip setuptools wheel
