@@ -3,6 +3,7 @@ FROM lablup/backendai-krunner-wheels:static-gnu AS wheels
 FROM lablup/backendai-krunner-python:static-gnu
 
 ARG PREFIX=/opt/backend.ai
+ARG ARCH=x86_64
 
 COPY --from=wheels /root/wheels/* /root/wheels/
 COPY requirements.txt /root/
@@ -17,7 +18,7 @@ RUN if test ! -f "${PREFIX}/bin/python" -a ! -h "${PREFIX}/bin/python" ; then \
       ln -s "${PREFIX}/bin/python3" "${PREFIX}/bin/python"; \
     fi
 
-COPY ttyd_linux.x86_64.bin ${PREFIX}/bin/ttyd
+COPY ttyd_linux.${ARCH}.bin ${PREFIX}/bin/ttyd
 COPY licenses/* ${PREFIX}/licenses/wheels/
 RUN chmod +x ${PREFIX}/bin/ttyd
 
