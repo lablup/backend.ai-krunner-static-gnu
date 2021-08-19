@@ -24,10 +24,10 @@ COPY ttyd_linux.${ARCH}.bin ${PREFIX}/bin/ttyd
 COPY licenses/* ${PREFIX}/licenses/wheels/
 RUN chmod +x ${PREFIX}/bin/ttyd
 
-# Build the image archive
-RUN apt-get update && apt-get install -y xz-utils
+# Create the image archive
+# (compression is done in the host for speed)
 RUN cd ${PREFIX}; \
-    tar cJf /root/image.tar.xz ./*
+    tar cf /root/image.tar ./*
 
 LABEL ai.backend.krunner.version=8
 CMD ["${PREFIX}/bin/python"]

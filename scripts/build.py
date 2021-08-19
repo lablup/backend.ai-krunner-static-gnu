@@ -58,8 +58,12 @@ def main(distro, arch):
     try:
         subprocess.run([
             'docker', 'cp',
-            f'{cid}:/root/image.tar.xz',
-            str(base_path / f'krunner-env.{distro}.{arch}.tar.xz'),
+            f'{cid}:/root/image.tar',
+            str(base_path / f'krunner-env.{distro}.{arch}.tar'),
+        ], cwd=base_path, check=True)
+        subprocess.run([
+            'xz',
+            str(base_path / f'krunner-env.{distro}.{arch}.tar'),
         ], cwd=base_path, check=True)
         proc = subprocess.run([
             'docker', 'inspect', cid,

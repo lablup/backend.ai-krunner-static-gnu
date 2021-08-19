@@ -61,6 +61,7 @@ jobs:
       run: echo ${{ steps.qemu.outputs.platforms }}
     - name: Install dependencies
       run: |
+        sudo apt install -y xz-utils
         docker pull ${{ env.img }}
         # for host env
         python -m pip install -U pip setuptools wheel
