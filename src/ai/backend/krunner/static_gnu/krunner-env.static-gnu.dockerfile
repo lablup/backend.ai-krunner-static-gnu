@@ -1,6 +1,8 @@
-FROM lablup/backendai-krunner-wheels:static-gnu AS wheels
+ARG ARCH=x86_64
+FROM --platform=linux/${ARCH} lablup/backendai-krunner-wheels:static-gnu AS wheels
 
-FROM lablup/backendai-krunner-python:static-gnu
+ARG ARCH=x86_64
+FROM --platform=linux/${ARCH} lablup/backendai-krunner-python:static-gnu
 
 ARG PREFIX=/opt/backend.ai
 ARG ARCH=x86_64

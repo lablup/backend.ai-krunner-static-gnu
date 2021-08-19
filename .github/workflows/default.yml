@@ -72,8 +72,9 @@ jobs:
         sed -i 's/ARCH/${{ matrix.arch }}/g' MANIFEST.in
         docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws ${{ env.img }} \
           ${{ env.py }} setup.py bdist_wheel
-        mv dist/backend.ai_krunner_static_gnu-*.whl \
-           dist/backend.ai_krunner_static_gnu-py3-none-manylinux2014_${{ matrix.arch }}.whl
+        PKGVER=$(python -c 'from ai.backend.krunner.static_gnu import __version__; print(__version__, end="")')
+        sudo mv dist/backend.ai_krunner_static_gnu-${PKGVER}-*.whl \
+                dist/backend.ai_krunner_static_gnu-${PKGVER}-py3-none-manylinux2014_${{ matrix.arch }}.whl
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       with:
