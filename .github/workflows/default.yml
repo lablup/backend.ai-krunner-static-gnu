@@ -83,6 +83,7 @@ jobs:
   publish:
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
     needs: [sdist, bdist_wheel]
+    runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
       with:
