@@ -5,7 +5,7 @@ ARG PREFIX=/opt/backend.ai
 ARG ARCH=x86_64
 
 ENV PATH=${PREFIX}/bin:$PATH \
-    PYTHON_VERSION=3.8.6 \
+    PYTHON_VERSION=3.9.6 \
     LANG=C.UTF-8
 
 RUN apt-get update \
