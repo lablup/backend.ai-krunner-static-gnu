@@ -17,7 +17,11 @@ RUN apt-get update \
 RUN set -ex \
     && mkdir -p ${PREFIX} \
     && cd /root \
-    && wget -O python.tar.zst "https://github.com/indygreg/python-build-standalone/releases/download/20210724/cpython-3.9.6-${ARCH}-unknown-linux-gnu-noopt-20210724T1424.tar.zst" \
+    if [ "${ARCH}" == "x86_64" ]; then \
+      wget -O python.tar.zst "https://github.com/indygreg/python-build-standalone/releases/download/20210724/cpython-3.9.6-${ARCH}-unknown-linux-gnu-pgo-20210724T1424.tar.zst" \
+    else \
+      wget -O python.tar.zst "https://github.com/indygreg/python-build-standalone/releases/download/20210724/cpython-3.9.6-${ARCH}-unknown-linux-gnu-noopt-20210724T1424.tar.zst" \
+    fi \
     && tar -I zstd -xC . --strip-components=1 -f python.tar.zst \
     && mv /root/install/* ${PREFIX}/ \
     && mv /root/licenses ${PREFIX}/ \
