@@ -22,7 +22,7 @@ RUN set -ex \
     else \
       wget -O python.tar.zst "https://github.com/indygreg/python-build-standalone/releases/download/20210724/cpython-3.9.6-${ARCH}-unknown-linux-gnu-noopt-20210724T1424.tar.zst" \
     fi \
-    && tar -I zstd -xC . --strip-components=1 -f python.tar.zst \
+    tar -I zstd -xC . --strip-components=1 -f python.tar.zst \
     && mv /root/install/* ${PREFIX}/ \
     && mv /root/licenses ${PREFIX}/ \
     && rm -f python.tar.zst
