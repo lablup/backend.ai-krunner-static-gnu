@@ -9,7 +9,7 @@ import click
 
 
 default_distro = 'static-gnu'
-default_arch = 'x86_64'
+default_arch = platform.machine()
 
 
 @click.command()
@@ -41,7 +41,6 @@ def main(distro, arch):
     ], cwd=base_path, check=True)
     click.secho(f'Building krunner for {distro}', fg='yellow', bold=True)
     cid = secrets.token_hex(8)
-    arch = platform.machine()  # docker builds the image for the current arch.
     subprocess.run([
         'docker', 'buildx', 'build',
         '--platform', f'linux/{arch}',
