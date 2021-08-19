@@ -33,7 +33,7 @@ def main(distro, arch):
     click.secho(f'Bundling static Python for krunner for {distro}', fg='yellow', bold=True)
     subprocess.run([
         'docker', 'buildx', 'build',
-        '--arg', f'ARCH={arch}',
+        '--build-arg', f'ARCH={arch}',
         '--platform', f'linux/{arch}',
         '-f', f'krunner-python.{distro}.dockerfile',
         '-t', f'lablup/backendai-krunner-python:{distro}',
@@ -45,7 +45,7 @@ def main(distro, arch):
     subprocess.run([
         'docker', 'buildx', 'build',
         '--platform', f'linux/{arch}',
-        '--arg', f'ARCH={arch}',
+        '--build-arg', f'ARCH={arch}',
         '-f', f'krunner-env.{distro}.dockerfile',
         '-t', f'krunner-env.{distro}',
         '.'
