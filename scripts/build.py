@@ -24,7 +24,7 @@ def main(distro, arch):
     if (base_path / f'krunner-wheels.{distro}.dockerfile').exists():
         click.secho(f'Building Python wheels for krunner for {distro}', fg='yellow', bold=True)
         subprocess.run([
-            'docker', 'buildx',
+            'docker', 'buildx', 'build',
             '--platform', f'linux/{arch}',
             '-f', f'krunner-wheels.{distro}.dockerfile',
             '-t', f'lablup/backendai-krunner-wheels:{distro}',
@@ -32,7 +32,7 @@ def main(distro, arch):
         ], cwd=base_path, check=True)
     click.secho(f'Bundling static Python for krunner for {distro}', fg='yellow', bold=True)
     subprocess.run([
-        'docker', 'buildx',
+        'docker', 'buildx', 'build',
         '--arg', f'ARCH={arch}',
         '--platform', f'linux/{arch}',
         '-f', f'krunner-python.{distro}.dockerfile',
@@ -43,7 +43,7 @@ def main(distro, arch):
     cid = secrets.token_hex(8)
     arch = platform.machine()  # docker builds the image for the current arch.
     subprocess.run([
-        'docker', 'buildx',
+        'docker', 'buildx', 'build',
         '--platform', f'linux/{arch}',
         '--arg', f'ARCH={arch}',
         '-f', f'krunner-env.{distro}.dockerfile',
