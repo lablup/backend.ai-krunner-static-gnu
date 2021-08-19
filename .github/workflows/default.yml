@@ -21,6 +21,7 @@ jobs:
     - name: Build sdist
       run: |
         python setup.py sdist
+        ls -lh dist
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       with:
@@ -75,6 +76,7 @@ jobs:
         PKGVER=$(python -c 'from ai.backend.krunner.static_gnu import __version__; print(__version__, end="")')
         sudo mv dist/backend.ai_krunner_static_gnu-${PKGVER}-*.whl \
                 dist/backend.ai_krunner_static_gnu-${PKGVER}-py3-none-manylinux2014_${{ matrix.arch }}.whl
+        ls -lh dist
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       with:
