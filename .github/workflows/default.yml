@@ -78,7 +78,7 @@ jobs:
           ${{ env.py }} setup.py bdist_wheel
         PKGVER=$(python -c 'from ai.backend.krunner.static_gnu import __version__; print(__version__, end="")')
         MANYLINUX_PTAG=manylinux2014_${{ matrix.arch }}
-        MUSL_PTAG=musllinux_1_1_${{ matrix.arch }}
+        # MUSL_PTAG=musllinux_1_1_${{ matrix.arch }}   # not supported in pypi yet
         case "${{ matrix.arch }}" in
         "aarch64")
           MACOS_PTAG=macosx_11_0_arm64 ;;
@@ -86,7 +86,7 @@ jobs:
           MACOS_PTAG=macosx_11_0_${{ matrix.arch }} ;;
         esac
         sudo mv dist/backend.ai_krunner_static_gnu-${PKGVER}-*.whl \
-                dist/backend.ai_krunner_static_gnu-${PKGVER}-py3-none-${MANYLINUX_PTAG}.${MUSL_PTAG}.${MACOS_PTAG}.whl
+                dist/backend.ai_krunner_static_gnu-${PKGVER}-py3-none-${MANYLINUX_PTAG}.${MACOS_PTAG}.whl
         ls -lh dist
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
