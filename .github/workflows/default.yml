@@ -1,0 +1,124 @@
+name: default
+
+on: [push]
+
+jobs:
+
+  sdist:
+    if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        lfs: true
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    - name: Install dependencies
+      run: |
+        python -m pip install -U pip setuptools wheel
+    - name: Build sdist
+      run: |
+        python setup.py sdist
+        ls -lh dist
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: dist
+        path: dist
+
+
+  bdist_wheel:
+    if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-20.04]
+        pyver: [cp39-cp39]
+        arch: [x86_64, aarch64]
+
+    env:
+      py: /opt/python/${{ matrix.pyver }}/bin/python
+      img: quay.io/pypa/manylinux2014_${{ matrix.arch }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        lfs: true
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    - name: Set up QEMU
+      id: qemu
+      uses: docker/setup-qemu-action@v1
+    - name: Show available platforms
+      run: echo ${{ steps.qemu.outputs.platforms }}
+    - name: Install dependencies
+      run: |
+        sudo apt install -y xz-utils
+        docker pull ${{ env.img }}
+        # for host env
+        python -m pip install -U pip setuptools wheel
+        python -m pip install -U -r requirements/build.txt
+        python -m pip install -U -e .
+        # for arch-specific env
+        docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws ${{ env.img }} \
+          ${{ env.py }} -m pip install -U pip setuptools wheel
+    - name: Build wheel
+      run: |
+        python scripts/build.py --arch ${{ matrix.arch }}
+        sed -i 's/ARCH/${{ matrix.arch }}/g' MANIFEST.in
+        docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws ${{ env.img }} \
+          ${{ env.py }} setup.py bdist_wheel
+        PKGVER=$(python -c 'from ai.backend.krunner.static_gnu import __version__; print(__version__, end="")')
+        MANYLINUX_PTAG=manylinux2014_${{ matrix.arch }}
+        MUSL_PTAG=musllinux_1_1_${{ matrix.arch }}
+        case "${{ matrix.arch }}" in
+        "aarch64")
+          MACOS_PTAG=macosx_11_0_arm64 ;;
+        *)
+          MACOS_PTAG=macosx_11_0_${{ matrix.arch }} ;;
+        esac
+        sudo mv dist/backend.ai_krunner_static_gnu-${PKGVER}-*.whl \
+                dist/backend.ai_krunner_static_gnu-${PKGVER}-py3-none-${MANYLINUX_PTAG}.${MUSL_PTAG}.${MACOS_PTAG}.whl
+        ls -lh dist
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: dist
+        path: dist
+
+
+  publish:
+    if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
+    needs: [sdist, bdist_wheel]
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        lfs: true
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    - name: Install dependencies
+      run: |
+        python -m pip install -U pip setuptools wheel
+        python -m pip install -U twine
+    - name: Download distributions
+      uses: actions/download-artifact@v2
+      with:
+        name: dist
+        path: dist
+    - name: Publish
+      env:
+        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+      run: |
+        twine upload dist/*
