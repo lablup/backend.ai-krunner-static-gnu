@@ -40,3 +40,37 @@ $ pip install -U click -e .
 
 Note that `src/ai/backend/krunner/{distro_}/krunner-version.{distro}.txt` files are
 overwritten by the build script from the label.
+
+## Build custom ttyd binary
+
+`libwebsockets>=4.0.0` features auto ping/pong with 5 min default interval.
+(https://github.com/warmcat/libwebsockets#connection-validity-tracking) And,
+`ws_ping_pong_interval` of ttyd is not effective in `libwebsockets>=4.0.0`.
+This seems to be the reason why `ttyd>=1.6.1` does not set
+`ws_ping_pong_interval` for `libwebsockets>=4.0.0`.
+(https://github.com/tsl0922/ttyd/blob/master/src/server.c#L456)
+
+But, our WSProxy sever TCP connection if there is no data transfer for 30
+seconds, which is far less than 5 min. This causes periodic blinking of ttyd
+terminal.
+
+To fix this, we build ttyd==1.6.1 with libwebsockets==3.2.3, for now.
+
+```console
+# Prepare Ubuntu environment (possibly, through container) and dependencies.
+sudo apt-get update
+sudo apt-get install -y autoconf automake build-essential cmake curl file libtool
+
+# Download ttyd source.
+git clone https://github.com/tsl0922/ttyd.git
+cd ttyd
+
+# Edit ./scripts/cross-build.sh as you want.
+# For example, set `LIBWEBSOCKETS_VERSION="3.2.3"`
+
+# Run build script.
+./scripts/cross-build.sh
+
+# Check ttyd binary version.
+./build/ttyd --version
+```
