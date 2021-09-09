@@ -43,6 +43,8 @@ overwritten by the build script from the label.
 
 ## Build custom ttyd binary
 
+**⚠️ Warning: ttyd uses `musl` as their C stdlib, not `glibc`. Also, trying to run cross-build script on aarch64-based machine will not work, since `musl` toochain used on the script is x86_64 binary.** 
+
 `libwebsockets>=4.0.0` features auto ping/pong with 5 min default interval.
 (https://github.com/warmcat/libwebsockets#connection-validity-tracking) And,
 `ws_ping_pong_interval` of ttyd is not effective in `libwebsockets>=4.0.0`.
@@ -50,11 +52,8 @@ This seems to be the reason why `ttyd>=1.6.1` does not set
 `ws_ping_pong_interval` for `libwebsockets>=4.0.0`.
 (https://github.com/tsl0922/ttyd/blob/master/src/server.c#L456)
 
-But, our WSProxy sever TCP connection if there is no data transfer for 30
-seconds, which is far less than 5 min. This causes periodic blinking of ttyd
-terminal.
-
-To fix this, we build ttyd==1.6.1 with libwebsockets==3.2.3, for now.
+We solved this by modifying latest version of `libwebsockets`' source manually. In order to achieve this, 
+you'll need to modify ttyd's build script.
 
 ```console
 # Prepare Ubuntu environment (possibly, through container) and dependencies.
@@ -67,7 +66,14 @@ cd ttyd
 
 # Edit ./scripts/cross-build.sh as you want.
 # For example, set `LIBWEBSOCKETS_VERSION="3.2.3"`
-
+```
+Now add these two lines under `pushd "${BUILD_DIR}/libwebsockets-${LIBWEBSOCKETS_VERSION}"`:
+```console
+sed -i 's/context->default_retry.secs_since_valid_ping = 300/context->default_retry.secs_since_valid_ping = 20/g' lib/core/context.c 
+sed -i 's/context->default_retry.secs_since_valid_hangup = 310/context->default_retry.secs_since_valid_hangup = 30/g' lib/core/context.c 
+```
+You can now start building `ttyd` binary.   
+```console
 # Run build script.
 ./scripts/cross-build.sh
 
