@@ -40,3 +40,44 @@ $ pip install -U click -e .
 
 Note that `src/ai/backend/krunner/{distro_}/krunner-version.{distro}.txt` files are
 overwritten by the build script from the label.
+
+## Build custom ttyd binary
+
+**⚠️ Warning: Use a x86-64 host to build ttyd, because:**
+  - ttyd uses `musl` as their C stdlib, not `glibc`.
+  - The `musl` toochain used by the build script is x86_64 binaries.
+
+`libwebsockets>=4.0.0` features auto ping/pong with 5 min default interval.
+(https://github.com/warmcat/libwebsockets#connection-validity-tracking) And,
+`ws_ping_pong_interval` of ttyd is not effective in `libwebsockets>=4.0.0`.
+This seems to be the reason why `ttyd>=1.6.1` does not set
+`ws_ping_pong_interval` for `libwebsockets>=4.0.0`.
+(https://github.com/tsl0922/ttyd/blob/master/src/server.c#L456)
+
+To fix this issue, we modify and build the latest version of `libwebsockets` used by the ttyd build script manually.
+
+```console
+# Prepare Ubuntu environment (possibly, through container) and dependencies.
+sudo apt-get update
+sudo apt-get install -y autoconf automake build-essential cmake curl file libtool
+
+# Download ttyd source.
+git clone https://github.com/tsl0922/ttyd.git
+cd ttyd
+```
+
+Now let's modify `./scripts/cross-build.sh`.  
+Add these two lines under `pushd "${BUILD_DIR}/libwebsockets-${LIBWEBSOCKETS_VERSION}"`:
+```sh
+sed -i 's/context->default_retry.secs_since_valid_ping = 300/context->default_retry.secs_since_valid_ping = 20/g' lib/core/context.c 
+sed -i 's/context->default_retry.secs_since_valid_hangup = 310/context->default_retry.secs_since_valid_hangup = 30/g' lib/core/context.c 
+```
+
+Finally, build the `ttyd` binary.   
+```console
+# Run build script.
+./scripts/cross-build.sh
+
+# Check ttyd binary version.
+./build/ttyd --version
+```
