@@ -1,3 +1,4 @@
+include src/ai/backend/krunner/static_gnu/__init__.py
 include src/ai/backend/krunner/static_gnu/krunner-env.static-gnu.ARCH.tar.xz
 include src/ai/backend/krunner/static_gnu/ttyd_linux.ARCH.bin
 include src/ai/backend/krunner/static_gnu/versions.txt
