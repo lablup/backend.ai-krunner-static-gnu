@@ -1,5 +1,5 @@
 async_timeout~=4.0
-pyzmq~=24.0
+pyzmq~=25.0
 uvloop~=0.17
 attrs~=22.1
 janus~=1.0

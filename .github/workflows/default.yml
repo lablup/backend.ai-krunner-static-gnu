@@ -15,7 +15,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.10'
+        python-version: '3.11'
     - name: Install dependencies
       run: |
         python -m pip install -U pip setuptools wheel
@@ -38,7 +38,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-20.04]
-        pyver: [cp310-cp310]
+        pyver: [cp311-cp311]
         arch: [x86_64, aarch64]
 
     env:
@@ -53,7 +53,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.10'
+        python-version: '3.11'
     - name: Set up QEMU
       id: qemu
       uses: docker/setup-qemu-action@v2
@@ -106,7 +106,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.10'
+        python-version: '3.11'
     - name: Install dependencies
       run: |
         python -m pip install -U pip setuptools wheel

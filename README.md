@@ -17,7 +17,7 @@ binaries and does not work as intended.  Just refer this repository on how we bu
 ```console
 $ git clone https://github.com/lablup/backend.ai-krunner-{distro} krunner-{distro}
 $ cd krunner-{distro}
-$ pyenv virtualenv 3.9.6 venv-krunner  # you may share the same venv with other krunner projects
+$ pyenv virtualenv 3.11.1 venv-krunner  # you may share the same venv with other krunner projects
 $ pyenv local venv-krunner
 $ pip install -U pip setuptools
 $ pip install -U click -e .
@@ -27,8 +27,9 @@ $ pip install -U click -e .
 
 1. Modify Dockerfile and/or other contents.
   - To update the Python version, update `src/ai/backend/krunner/{distro_}/krunner-python.{distro}.txt`
-    and the dockerfiles accordingly, including the `PYTHON_VERSION` environment variable and the download
-    URL of the statically built Python distribution.
+    and the dockerfiles (both python and wheels) accordingly, including the
+    `PYTHON_VERSION` environment variable and the download URL of the
+    statically built Python distribution.
 2. Increment *the volume version number* specified as a label `ai.backend.krunner.version`
    in `src/ai/backend/krunner/{distro_}/krunner-env.{distro}.dockerfile`
 3. Run `scripts/build.py`.
