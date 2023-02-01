@@ -46,14 +46,14 @@ def main(distro, arch):
         '--platform', f'linux/{arch}',
         '--build-arg', f'ARCH={arch}',
         '-f', f'krunner-env.{distro}.dockerfile',
-        '-t', f'krunner-env.{distro}',
+        '-t', f'lablup/backendai-krunner-env.{distro}',
         '.'
     ], cwd=base_path, check=True)
     subprocess.run([
         'docker', 'create',
         '--platform', f'linux/{arch}',
         '--name', cid,
-        f'krunner-env.{distro}',
+        f'lablup/backendai-krunner-env.{distro}',
     ], cwd=base_path, check=True)
     try:
         subprocess.run([
