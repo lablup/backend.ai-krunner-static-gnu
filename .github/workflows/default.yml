@@ -77,16 +77,16 @@ jobs:
         docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws ${{ env.img }} \
           ${{ env.py }} setup.py bdist_wheel
         PKGVER=$(python -c 'from ai.backend.krunner.static_gnu import __version__; print(__version__, end="")')
-        MANYLINUX_PTAG=manylinux2014_${{ matrix.arch }}
-        # MUSL_PTAG=musllinux_1_1_${{ matrix.arch }}   # not supported in pypi yet
-        case "${{ matrix.arch }}" in
+        GLIBC_PTAG=manylinux2014_${{ matrix.arch }}  # to allow installing the krunner wheel when running Backend.AI on manylinux
+        MUSL_PTAG=musllinux_1_1_${{ matrix.arch }}   # to allow installing the krunner wheel when running Backend.AI on musllinux
+        case "${{ matrix.arch }}" in                 # to allow installing the krunner wheel when running Backend.AI on macOS
         "aarch64")
           MACOS_PTAG=macosx_11_0_arm64 ;;
         *)
           MACOS_PTAG=macosx_11_0_${{ matrix.arch }} ;;
         esac
         sudo mv dist/backend.ai_krunner_static_gnu-${PKGVER}-*.whl \
-                dist/backend.ai_krunner_static_gnu-${PKGVER}-py3-none-${MANYLINUX_PTAG}.${MACOS_PTAG}.whl
+                dist/backend.ai_krunner_static_gnu-${PKGVER}-py3-none-${GLIBC_PTAG}.${MUSL_PTAG}.${MACOS_PTAG}.whl
         ls -lh dist
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
