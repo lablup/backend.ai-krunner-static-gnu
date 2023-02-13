@@ -26,6 +26,7 @@ def main(distro, arch):
         subprocess.run([
             'docker', 'buildx', 'build',
             '--platform', f'linux/{arch}',
+            '--build-arg', f'ARCH={arch}',
             '-f', f'krunner-wheels.{distro}.dockerfile',
             '-t', f'lablup/backendai-krunner-wheels:{distro}',
             '.'
@@ -33,8 +34,8 @@ def main(distro, arch):
     click.secho(f'Bundling static Python for krunner for {distro}', fg='yellow', bold=True)
     subprocess.run([
         'docker', 'buildx', 'build',
-        '--build-arg', f'ARCH={arch}',
         '--platform', f'linux/{arch}',
+        '--build-arg', f'ARCH={arch}',
         '-f', f'krunner-python.{distro}.dockerfile',
         '-t', f'lablup/backendai-krunner-python:{distro}',
         '.'
@@ -46,14 +47,14 @@ def main(distro, arch):
         '--platform', f'linux/{arch}',
         '--build-arg', f'ARCH={arch}',
         '-f', f'krunner-env.{distro}.dockerfile',
-        '-t', f'lablup/backendai-krunner-env.{distro}',
+        '-t', f'lablup/backendai-krunner-env:{distro}',
         '.'
     ], cwd=base_path, check=True)
     subprocess.run([
         'docker', 'create',
         '--platform', f'linux/{arch}',
         '--name', cid,
-        f'lablup/backendai-krunner-env.{distro}',
+        f'lablup/backendai-krunner-env:{distro}',
     ], cwd=base_path, check=True)
     try:
         subprocess.run([
@@ -62,7 +63,7 @@ def main(distro, arch):
             str(base_path / f'krunner-env.{distro}.{arch}.tar'),
         ], cwd=base_path, check=True)
         subprocess.run([
-            'xz',
+            'xz', '-f',
             str(base_path / f'krunner-env.{distro}.{arch}.tar'),
         ], cwd=base_path, check=True)
         proc = subprocess.run([
