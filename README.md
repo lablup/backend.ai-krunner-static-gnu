@@ -8,16 +8,16 @@ binaries and does not work as intended.  Just refer this repository on how we bu
 
 ## How to read below
 
-* `{distro}` is a string like `static-gnu`, `static-musl`, etc. depending on which repository you are in.
+* `{distro}` is a string like `static-gnu`, `alpine`, etc. depending on which repository you are in.
 * `{distro_}` is a string same to `{distro}` but with hyphens replaced with underscores for Python
-  package names and paths. (e.g., `static_gnu`, `static_musl`)
+  package names and paths. (e.g., `static_gnu`, `alpine`)
 
 ## Development
 
 ```console
 $ git clone https://github.com/lablup/backend.ai-krunner-{distro} krunner-{distro}
 $ cd krunner-{distro}
-$ pyenv virtualenv 3.11.1 venv-krunner  # you may share the same venv with other krunner projects
+$ pyenv virtualenv 3.11.2 venv-krunner  # you may share the same venv with other krunner projects
 $ pyenv local venv-krunner
 $ pip install -U pip setuptools
 $ pip install -U click -e .
@@ -41,6 +41,11 @@ $ pip install -U click -e .
 
 Note that `src/ai/backend/krunner/{distro_}/krunner-version.{distro}.txt` files are
 overwritten by the build script from the label.
+
+## Making a minimal glibc-based image compatibile with this krunner package
+
+[Use CentOS 7 or later and install this list of packages.](https://github.com/lablup/backend.ai-krunner-static-gnu/blob/master/compat-test.Dockerfile)
+Also [refer the test script](https://github.com/lablup/backend.ai-krunner-static-gnu/blob/main/scripts/test.sh).
 
 ## Build custom ttyd binary
 
