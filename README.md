@@ -1,6 +1,34 @@
 # backend.ai-krunner-static-gnu
 Backend.AI Kernel Runner Package for glibc-based Kernels
 
+This package contains a statically built Python distribution and 3rd-party libraries required to run
+[our krunner module](https://github.com/lablup/backend.ai/tree/main/src/ai/backend/kernel)
+inside containers whose images are provided by users.
+
+The krunner wheel itself can be installed into any Python environments (the content of this plugin
+package is agnostic to platforms and architectures as it's a mere declaration of the plugin
+interface), but we still apply the binary wheel platform tags so that setuptools could distinguish
+the target CPU architecture as follows:
+
+| Where is Backend.AI running? | What is the user container's base image? | The krunner wheel used |
+|------------------------------|------------------------------------------|------------------------|
+| manylinux (x86-64)           | manylinux (x86-64)                       | `backend.ai_krunner_static_gnu-X.X.X-py3-none-manylinux2014_x86_64.musllinux_1_1_x86_64.macosx_11_0_x86_64.whl` |
+| manylinux (x86-64)           | musllinux (x86-64)                       | `backend.ai_krunner_alpine-X.X.X-py3-none-manylinux2014_x86_64.musllinux_1_1_x86_64.macosx_11_0_x86_64.whl` |
+| manylinux (aarch64)          | manylinux (aarch64)                      | `backend.ai_krunner_static_gnu-X.X.X-py3-none-manylinux2014_aarch64.musllinux_1_1_aarch64.macosx_11_0_arm64.whl` |
+| manylinux (aarch64)          | musllinux (aarch64)                      | `backend.ai_krunner_alpine-X.X.X-py3-none-manylinux2014_aarch64.musllinux_1_1_aarch64.macosx_11_0_arm64.whl` |
+| musllinux (x86-64)           | manylinux (x86-64)                       | `backend.ai_krunner_static_gnu-X.X.X-py3-none-manylinux2014_x86_64.musllinux_1_1_x86_64.macosx_11_0_x86_64.whl` |
+| musllinux (x86-64)           | musllinux (x86-64)                       | `backend.ai_krunner_alpine-X.X.X-py3-none-manylinux2014_x86_64.musllinux_1_1_x86_64.macosx_11_0_x86_64.whl` |
+| musllinux (aarch64)          | manylinux (aarch64)                      | `backend.ai_krunner_static_gnu-X.X.X-py3-none-manylinux2014_aarch64.musllinux_1_1_aarch64.macosx_11_0_arm64.whl` |
+| musllinux (aarch64)          | musllinux (aarch64)                      | `backend.ai_krunner_alpine-X.X.X-py3-none-manylinux2014_aarch64.musllinux_1_1_aarch64.macosx_11_0_arm64.whl` |
+| macOS (x86-64)               | manylinux (x86-64)                       | `backend.ai_krunner_static_gnu-X.X.X-py3-none-manylinux2014_x86_64.musllinux_1_1_x86_64.macosx_11_0_x86_64.whl` |
+| macOS (x86-64)               | musllinux (x86-64)                       | `backend.ai_krunner_alpine-X.X.X-py3-none-manylinux2014_x86_64.musllinux_1_1_x86_64.macosx_11_0_x86_64.whl` |
+| macOS (aarch64)              | manylinux (aarch64)                      | `backend.ai_krunner_static_gnu-X.X.X-py3-none-manylinux2014_aarch64.musllinux_1_1_aarch64.macosx_11_0_arm64.whl` |
+| macOS (aarch64)              | musllinux (aarch64)                      | `backend.ai_krunner_alpine-X.X.X-py3-none-manylinux2014_aarch64.musllinux_1_1_aarch64.macosx_11_0_arm64.whl` |
+
+We named the krunner package based on musl 1.2 as "alpine" because practically Alpine linux is the
+only distribution which actively uses musl and it is currently not possible to build static CPython
+which can import 3rd-party dynamic modules on top of the musl ecosystem.
+
 ## Notice about source distribution
 
 This package is to distribute prebuilt binaries, so the source distribution does not have prebuilt
@@ -36,8 +64,8 @@ $ pip install -U click -e .
 4. Repeat the above steps for each distro version. (For static builds, there is only one.)
 5. Increment *the package version number* in `src/ai/backend/krunner/{distro_}/__init__.py`
 6. `rm -r dist/* build/*` (skip if these directories do not exist and or are empty)
-7. `python setup.py sdist bdist_wheel`
-8. `twine upload dist/*`
+7. Commit.
+8. Create a signed annotated tag and push the tag to let GitHub Action build and publish wheels.
 
 Note that `src/ai/backend/krunner/{distro_}/krunner-version.{distro}.txt` files are
 overwritten by the build script from the label.
