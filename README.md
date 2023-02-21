@@ -70,6 +70,10 @@ $ pip install -U click -e .
 Note that `src/ai/backend/krunner/{distro_}/krunner-version.{distro}.txt` files are
 overwritten by the build script from the label.
 
+WARNING: We should choose [`x86_64_v2` binaries from the indygreg repository](https://gregoryszorc.com/docs/python-build-standalone/main/running.html)
+when updating the Python runtime version for CPU compatibility with some of our
+test setups and customer sites.
+
 ## Making a minimal glibc-based image compatibile with this krunner package
 
 [Use CentOS 7 or later and install this list of packages.](https://github.com/lablup/backend.ai-krunner-static-gnu/blob/master/compat-test.Dockerfile)
