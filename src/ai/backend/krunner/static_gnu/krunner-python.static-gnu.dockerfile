@@ -20,7 +20,7 @@ RUN <<-EOF
     mkdir -p ${PREFIX}
     cd /root
     if [ "${ARCH}" = "x86_64" ]; then
-      wget -q -O python.tar.zst "https://github.com/indygreg/python-build-standalone/releases/download/20230116/cpython-3.11.1+20230116-x86_64_v3-unknown-linux-gnu-pgo-full.tar.zst"
+      wget -q -O python.tar.zst "https://github.com/indygreg/python-build-standalone/releases/download/20230116/cpython-3.11.1+20230116-x86_64_v2-unknown-linux-gnu-pgo-full.tar.zst"
     else
       wget -q -O python.tar.zst "https://github.com/indygreg/python-build-standalone/releases/download/20230116/cpython-3.11.1+20230116-aarch64-unknown-linux-gnu-noopt-full.tar.zst"
     fi
