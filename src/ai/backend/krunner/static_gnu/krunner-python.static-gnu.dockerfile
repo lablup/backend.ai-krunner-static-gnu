@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile-upstream:1-labs
-FROM ubuntu:20.04
+FROM quay.io/pypa/manylinux2014_x86_64
 
 ARG PREFIX=/opt/backend.ai
 ARG ARCH=x86_64
@@ -8,8 +8,7 @@ ENV PATH=${PREFIX}/bin:$PATH \
     PYTHON_VERSION=3.11.1 \
     LANG=C.UTF-8
 
-RUN apt-get update \
-    && apt-get install -y \
+RUN yum install -y \
 	wget \
 	tar \
 	zstd \
