@@ -1,4 +1,5 @@
-FROM quay.io/pypa/manylinux2014_x86_64
+ARG ARCH=x86_64
+FROM quay.io/pypa/manylinux2014_${ARCH}
 
 ENV PATH=$PATH:/opt/python/cp311-cp311/bin
 
