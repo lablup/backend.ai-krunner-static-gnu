@@ -9,6 +9,13 @@ ENV PATH=${PREFIX}/bin:$PATH \
     PYTHON_VERSION=3.11.1 \
     LANG=C.UTF-8
 
+RUN <<-EOF
+  # zstd not available on aarch CentOS repo
+  if [ "${ARCH}" = "aarch64" ]; then
+    yum install -y epel-release
+  fi
+EOF
+
 RUN yum install -y \
 	wget \
 	tar \
