@@ -1,6 +1,6 @@
 pyzmq~=25.1
 uvloop~=0.19
-attrs~=22.1
+attrs~=23.2
 janus~=1.0
 msgpack~=1.0
 jupyter-client~=8.6.1
