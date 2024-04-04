@@ -27,9 +27,9 @@ RUN <<-EOF
     mkdir -p ${PREFIX}
     cd /root
     if [ "${ARCH}" = "x86_64" ]; then
-      wget -q -O python.tar.zst "https://github.com/indygreg/python-build-standalone/releases/download/20230116/cpython-3.12.2+20240224-x86_64_v2-unknown-linux-gnu-pgo-full.tar.zst"
+      wget -q -O python.tar.zst "https://github.com/indygreg/python-build-standalone/releases/download/20240224/cpython-3.12.2+20240224-x86_64_v2-unknown-linux-gnu-pgo-full.tar.zst"
     else
-      wget -q -O python.tar.zst "https://github.com/indygreg/python-build-standalone/releases/download/20230116/cpython-3.12.2+20240224-aarch64-unknown-linux-gnu-noopt-full.tar.zst"
+      wget -q -O python.tar.zst "https://github.com/indygreg/python-build-standalone/releases/download/20240224/cpython-3.12.2+20240224-aarch64-unknown-linux-gnu-noopt-full.tar.zst"
     fi
     tar -I zstd -xC . --strip-components=1 -f python.tar.zst
     mv /root/install/* ${PREFIX}/
