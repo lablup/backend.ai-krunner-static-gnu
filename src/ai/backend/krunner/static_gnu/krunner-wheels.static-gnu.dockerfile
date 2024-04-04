@@ -1,7 +1,7 @@
 ARG ARCH=x86_64
 FROM quay.io/pypa/manylinux2014_${ARCH}
 
-ENV PATH=$PATH:/opt/python/cp311-cp311/bin
+ENV PATH=$PATH:/opt/python/cp312-cp312/bin
 
 COPY requirements.txt /root/
 

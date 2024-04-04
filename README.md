@@ -45,10 +45,11 @@ binaries and does not work as intended.  Just refer this repository on how we bu
 ```console
 $ git clone https://github.com/lablup/backend.ai-krunner-{distro} krunner-{distro}
 $ cd krunner-{distro}
-$ pyenv virtualenv 3.11.2 venv-krunner  # you may share the same venv with other krunner projects
+$ pyenv virtualenv 3.12.2 venv-krunner  # you may share the same venv with other krunner projects
 $ pyenv local venv-krunner
 $ pip install -U pip setuptools
-$ pip install -U click -e .
+$ pip install -U -r build/requirements.txt
+$ pip install -U -e .
 ```
 
 ## How to update
