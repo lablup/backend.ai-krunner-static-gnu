@@ -45,7 +45,7 @@ binaries and does not work as intended.  Just refer this repository on how we bu
 ```console
 $ git clone https://github.com/lablup/backend.ai-krunner-{distro} krunner-{distro}
 $ cd krunner-{distro}
-$ pyenv virtualenv 3.12.2 venv-krunner  # you may share the same venv with other krunner projects
+$ pyenv virtualenv 3.13.2 venv-krunner  # you may share the same venv with other krunner projects
 $ pyenv local venv-krunner
 $ pip install -U pip setuptools
 $ pip install -U -r build/requirements.txt
@@ -56,14 +56,14 @@ $ pip install -U -e .
 
 1. Modify Dockerfile and/or other contents.
   - To update the Python version, update `src/ai/backend/krunner/{distro_}/krunner-python.{distro}.txt`
-    and the dockerfiles (both python and wheels) accordingly, including the
+    and the dockerfiles (both _python_ and _wheels_) accordingly, including the
     `PYTHON_VERSION` environment variable and the download URL of the
     statically built Python distribution.
 2. Increment *the volume version number* specified as a label `ai.backend.krunner.version`
-   in `src/ai/backend/krunner/{distro_}/krunner-env.{distro}.dockerfile`
+   in `src/ai/backend/krunner/{distro_}/krunner-env.{distro}.dockerfile`.
 3. Run `scripts/build.py`.
 4. Repeat the above steps for each distro version. (For static builds, there is only one.)
-5. Increment *the package version number* in `src/ai/backend/krunner/{distro_}/__init__.py`
+5. Increment *the package version number* in `src/ai/backend/krunner/{distro_}/__init__.py`.
 6. `rm -r dist/* build/*` (skip if these directories do not exist and or are empty)
 7. Commit.
 8. Create a signed annotated tag and push the tag to let GitHub Action build and publish wheels.
