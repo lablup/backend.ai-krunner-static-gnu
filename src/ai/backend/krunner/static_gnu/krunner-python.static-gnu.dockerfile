@@ -27,9 +27,9 @@ RUN <<-EOF
     mkdir -p ${PREFIX}
     cd /root
     if [ "${ARCH}" = "x86_64" ]; then
-      wget -q -O python.tar.zst "https://github.com/astral-sh/python-build-standalone/releases/download/20250317/cpython-3.13.2+20250317-x86_64_v2-unknown-linux-gnu-pgo+lto-full.tar.zst"
+      wget -q -O python.tar.zst "https://github.com/astral-sh/python-build-standalone/releases/download/20250317/cpython-3.13.2+20250317-x86_64_v2-unknown-linux-gnu-install_only_stripped.tar.gz"
     else
-      wget -q -O python.tar.zst "https://github.com/astral-sh/python-build-standalone/releases/download/20250317/cpython-3.13.2+20250317-aarch64-unknown-linux-gnu-noopt-full.tar.zst"
+      wget -q -O python.tar.zst "https://github.com/astral-sh/python-build-standalone/releases/download/20250317/cpython-3.13.2+20250317-aarch64-unknown-linux-gnu-install_only_stripped.tar.gz"
     fi
     tar -I zstd -xC . --strip-components=1 -f python.tar.zst
     mv /root/install/* ${PREFIX}/
