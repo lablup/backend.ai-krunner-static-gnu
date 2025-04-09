@@ -14,6 +14,7 @@ jobs:
         lfs: true
     - name: Check current git-based package version
       run: |
+        git fetch --prune --unshallow  # to avoid breaking setuptools-scm's version inference
         git fetch --tags --force
         git describe --long
     - name: Set up Python
@@ -56,10 +57,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
       with:
-        fetch-depth: 0  # to avoid breaking setuptools-scm's version inference
         lfs: true
     - name: Check current git-based package version
       run: |
+        git fetch --prune --unshallow  # to avoid breaking setuptools-scm's version inference
         git fetch --tags --force
         git describe --long
     - name: Set up Python
