@@ -1,0 +1,87 @@
+[build-system]
+requires = [
+  "setuptools>=78.1",
+  "setuptools_scm[toml]>=7.0"
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "backend.ai-krunner-static-gnu"
+dynamic = ["version"]
+description = "Backend.AI Kernel Runner based on GNU libc"
+readme = "README.md"
+requires-python = ">=3.9"
+license-files = [
+    "LICENSE",
+    "src/ai/backend/krunner/static_gnu/licenses/LICENSE.*.txt",
+    "src/ai/backend/krunner/static_gnu/licenses/LICENSE.*.md",
+]
+authors = [
+    {name = "Lablup", email = "devops@lablup.com"},
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+]
+
+[dependency-groups]
+dev = [
+    "wheel>=0.34.2",
+    "twine~=6.1",
+    "pytest>=8.3.5",
+    "flake8>=3.7.9",
+    "codecov",
+    "mypy>=1.15",
+    "setuptools>=78",
+    "click>=8.1",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+namespaces = true
+
+[project.urls]
+Homepage = "https://github.com/lablup/backend.ai-krunner-static-gnu"
+Issues = "https://github.com/lablup/backend.ai/issues"
+
+[project.entry-points.backendai_krunner_v10]
+static_gnu = "ai.backend.krunner.static_gnu.plugin"
+
+[tool.flake8]
+# ref: http://pep8.readthedocs.io/en/latest/intro.html#error-codes
+ignore = [
+    "E126",
+    "E127",
+    "E128",
+    "E129",
+    "E722",
+    "E731",
+    "E221",
+    "E241",
+    "E401",
+    "W504",
+    "N801",
+    "N802"
+]
+max-line-length = 105
+builtins = "_"
+exclude = [
+    ".git",
+    ".cache",
+    ".idea",
+    ".egg",
+    "__pycache__",
+    "venv",
+    "build",
+    "dist",
+    "docs",
+]
+
+[tool.pytest]
+testpaths = "tests"
