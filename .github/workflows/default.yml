@@ -61,7 +61,6 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt install -y xz-utils
-        docker pull ${{ env.img }}
     - name: Build wheel
       run: |
         uv run python scripts/build.py --arch ${{ matrix.platform.arch }}
