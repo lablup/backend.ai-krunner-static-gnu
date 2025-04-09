@@ -68,7 +68,7 @@ jobs:
         uv build --wheel
     - name: Apply platform tags to wheel
       run: |
-        PKGVER=$(uv run python -c 'from ai.backend.krunner.static_gnu import __version__; print(__version__, end="")')
+        PKGVER=$(uv run python -c 'from importlib.metadata import version;print(version("backend.ai-krunner-static-gnu"))'
         GLIBC_PTAG=manylinux2014_${{ matrix.platform.arch }}  # to allow installing the krunner wheel when running Backend.AI on manylinux
         MUSL_PTAG=musllinux_1_1_${{ matrix.platform.arch }}   # to allow installing the krunner wheel when running Backend.AI on musllinux
         case "${{ matrix.platform.arch }}" in                 # to allow installing the krunner wheel when running Backend.AI on macOS
