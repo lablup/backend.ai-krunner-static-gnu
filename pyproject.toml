@@ -1,8 +1,5 @@
 [build-system]
-requires = [
-  "setuptools>=78.1",
-  "setuptools_scm>=8.0"
-]
+requires = ["setuptools>=78.1"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -53,7 +50,8 @@ Issues = "https://github.com/lablup/backend.ai/issues"
 [project.entry-points.backendai_krunner_v10]
 static_gnu = "ai.backend.krunner.static_gnu.plugin"
 
-[tool.setuptools_scm]
+[tool.setuptools.dynamic]
+version = {attr = "ai.backend.krunner.static_gnu.__version__"}
 
 [tool.uv]
 cache-keys = [{ file = "pyproject.toml" }, { git = { commit = true, tags = true } }]
