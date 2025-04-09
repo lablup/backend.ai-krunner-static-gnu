@@ -55,6 +55,9 @@ static_gnu = "ai.backend.krunner.static_gnu.plugin"
 
 [tool.setuptools_scm]
 
+[tool.uv]
+cache-keys = [{ file = "pyproject.toml" }, { git = { commit = true, tags = true } }]
+
 [tool.flake8]
 # ref: http://pep8.readthedocs.io/en/latest/intro.html#error-codes
 ignore = [
