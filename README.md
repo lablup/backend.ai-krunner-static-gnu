@@ -45,11 +45,15 @@ binaries and does not work as intended.  Just refer this repository on how we bu
 ```console
 $ git clone https://github.com/lablup/backend.ai-krunner-{distro} krunner-{distro}
 $ cd krunner-{distro}
-$ pyenv virtualenv 3.13.2 venv-krunner  # you may share the same venv with other krunner projects
-$ pyenv local venv-krunner
-$ pip install -U pip setuptools
-$ pip install -U -r build/requirements.txt
-$ pip install -U -e .
+$ uv sync
+```
+
+To build wheels locally, replace `ARCH` in `MANIFEST.in` with the current architecture (e.g.,
+"aarch64" or "x86_64"). Then:
+
+```console
+$ uv run python scripts/build.py
+$ uv build
 ```
 
 ## How to update
@@ -61,7 +65,7 @@ $ pip install -U -e .
     statically built Python distribution.
 2. Increment *the volume version number* specified as a label `ai.backend.krunner.version`
    in `src/ai/backend/krunner/{distro_}/krunner-env.{distro}.dockerfile`.
-3. Run `scripts/build.py`.
+3. Run `uv run python scripts/build.py` to confirm if the volume archive build is successfully done.
 4. Repeat the above steps for each distro version. (For static builds, there is only one.)
 5. Increment *the package version number* in `src/ai/backend/krunner/{distro_}/__init__.py`.
 6. `rm -r dist/* build/*` (skip if these directories do not exist and or are empty)
