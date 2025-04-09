@@ -67,10 +67,10 @@ $ uv build
    in `src/ai/backend/krunner/{distro_}/krunner-env.{distro}.dockerfile`.
 3. Run `uv run python scripts/build.py` to confirm if the volume archive build is successfully done.
 4. Repeat the above steps for each distro version. (For static builds, there is only one.)
-5. Increment *the package version number* in `src/ai/backend/krunner/{distro_}/__init__.py`.
-6. `rm -r dist/* build/*` (skip if these directories do not exist and or are empty)
-7. Commit.
-8. Create a signed annotated tag and push the tag to let GitHub Action build and publish wheels.
+5. `rm -r dist/* build/*` (skip if these directories do not exist and or are empty)
+6. Commit.
+7. Create a signed annotated tag and push the tag to let GitHub Action build and publish wheels.
+   The release version will follow the tag name.
 
 Note that `src/ai/backend/krunner/{distro_}/krunner-version.{distro}.txt` files are
 overwritten by the build script from the label.
