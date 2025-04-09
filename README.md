@@ -45,11 +45,15 @@ binaries and does not work as intended.  Just refer this repository on how we bu
 ```console
 $ git clone https://github.com/lablup/backend.ai-krunner-{distro} krunner-{distro}
 $ cd krunner-{distro}
-$ pyenv virtualenv 3.13.2 venv-krunner  # you may share the same venv with other krunner projects
-$ pyenv local venv-krunner
-$ pip install -U pip setuptools
-$ pip install -U -r build/requirements.txt
-$ pip install -U -e .
+$ uv sync
+```
+
+To build wheels locally, replace `ARCH` in `MANIFEST.in` with the current architecture (e.g.,
+"aarch64" or "x86_64"). Then:
+
+```console
+$ uv run python scripts/build.py
+$ uv build
 ```
 
 ## How to update
@@ -61,9 +65,9 @@ $ pip install -U -e .
     statically built Python distribution.
 2. Increment *the volume version number* specified as a label `ai.backend.krunner.version`
    in `src/ai/backend/krunner/{distro_}/krunner-env.{distro}.dockerfile`.
-3. Run `scripts/build.py`.
-4. Repeat the above steps for each distro version. (For static builds, there is only one.)
-5. Increment *the package version number* in `src/ai/backend/krunner/{distro_}/__init__.py`.
+3. Increment *the package version number* in `src/ai/backend/krunner/{distro_}/__init__.py`.
+4. Run `uv run python scripts/build.py` to confirm if the volume archive build is successfully done.
+5. Repeat the above steps for each distro version. (For static builds, there is only one.)
 6. `rm -r dist/* build/*` (skip if these directories do not exist and or are empty)
 7. Commit.
 8. Create a signed annotated tag and push the tag to let GitHub Action build and publish wheels.
@@ -105,14 +109,14 @@ git clone https://github.com/tsl0922/ttyd.git
 cd ttyd
 ```
 
-Now let's modify `./scripts/cross-build.sh`.  
+Now let's modify `./scripts/cross-build.sh`.
 Add these two lines under `pushd "${BUILD_DIR}/libwebsockets-${LIBWEBSOCKETS_VERSION}"`:
 ```sh
-sed -i 's/context->default_retry.secs_since_valid_ping = 300/context->default_retry.secs_since_valid_ping = 20/g' lib/core/context.c 
-sed -i 's/context->default_retry.secs_since_valid_hangup = 310/context->default_retry.secs_since_valid_hangup = 30/g' lib/core/context.c 
+sed -i 's/context->default_retry.secs_since_valid_ping = 300/context->default_retry.secs_since_valid_ping = 20/g' lib/core/context.c
+sed -i 's/context->default_retry.secs_since_valid_hangup = 310/context->default_retry.secs_since_valid_hangup = 30/g' lib/core/context.c
 ```
 
-Finally, build the `ttyd` binary.   
+Finally, build the `ttyd` binary.
 ```console
 # Run build script.
 ./scripts/cross-build.sh

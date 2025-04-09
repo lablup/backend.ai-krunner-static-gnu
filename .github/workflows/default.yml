@@ -16,34 +16,37 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: '3.13'
-    - name: Install dependencies
-      run: |
-        python -m pip install -U pip setuptools wheel
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
     - name: Build sdist
       run: |
-        python setup.py sdist
+        uv sync
+        uv build --sdist
         ls -lh dist
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
         name: dist-src
         path: dist
+    - name: Minimize uv cache
+      run: uv cache prune --ci
 
 
   bdist_wheel:
     if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.platform.os }}
 
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04]
+        platform: [
+          {os: ubuntu-22.04, arch: x86_64},
+          {os: ubuntu-22.04-arm, arch: aarch64},
+        ]
         pyver: [cp313-cp313]
-        arch: [x86_64, aarch64]
 
     env:
       py: /opt/python/${{ matrix.pyver }}/bin/python
-      img: quay.io/pypa/manylinux2014_${{ matrix.arch }}
 
     steps:
     - name: Checkout
@@ -54,45 +57,40 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: '3.13'
-    - name: Set up QEMU
-      id: qemu
-      uses: docker/setup-qemu-action@v3
-    - name: Show available platforms
-      run: echo ${{ steps.qemu.outputs.platforms }}
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
     - name: Install dependencies
       run: |
         sudo apt install -y xz-utils
-        docker pull ${{ env.img }}
-        # for host env
-        python -m pip install -U pip setuptools wheel
-        python -m pip install -U -r requirements/build.txt
-        python -m pip install -U -e .
-        # for arch-specific env
-        docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws ${{ env.img }} \
-          ${{ env.py }} -m pip install -U pip setuptools wheel
+        uv sync
+    - name: Build volume contents
+      run: |
+        uv run python scripts/build.py --arch ${{ matrix.platform.arch }}
     - name: Build wheel
       run: |
-        python scripts/build.py --arch ${{ matrix.arch }}
-        sed -i 's/ARCH/${{ matrix.arch }}/g' MANIFEST.in
-        docker run --rm -v ${{ github.workspace }}:/ws:rw --workdir=/ws ${{ env.img }} \
-          ${{ env.py }} setup.py bdist_wheel
-        PKGVER=$(python -c 'from ai.backend.krunner.static_gnu import __version__; print(__version__, end="")')
-        GLIBC_PTAG=manylinux2014_${{ matrix.arch }}  # to allow installing the krunner wheel when running Backend.AI on manylinux
-        MUSL_PTAG=musllinux_1_1_${{ matrix.arch }}   # to allow installing the krunner wheel when running Backend.AI on musllinux
-        case "${{ matrix.arch }}" in                 # to allow installing the krunner wheel when running Backend.AI on macOS
+        sed -i 's/ARCH/${{ matrix.platform.arch }}/g' MANIFEST.in
+        uv build --wheel
+    - name: Apply platform tags to wheel
+      run: |
+        PKGVER=$(uv run python -c 'from importlib.metadata import version;print(version("backend.ai-krunner-static-gnu"), end="")')
+        GLIBC_PTAG=manylinux2014_${{ matrix.platform.arch }}  # to allow installing the krunner wheel when running Backend.AI on manylinux
+        MUSL_PTAG=musllinux_1_1_${{ matrix.platform.arch }}   # to allow installing the krunner wheel when running Backend.AI on musllinux
+        case "${{ matrix.platform.arch }}" in                 # to allow installing the krunner wheel when running Backend.AI on macOS
         "aarch64")
           MACOS_PTAG=macosx_11_0_arm64 ;;
         *)
-          MACOS_PTAG=macosx_11_0_${{ matrix.arch }} ;;
+          MACOS_PTAG=macosx_11_0_${{ matrix.platform.arch }} ;;
         esac
-        sudo mv dist/backend.ai_krunner_static_gnu-${PKGVER}-*.whl \
-                dist/backend.ai_krunner_static_gnu-${PKGVER}-py3-none-${GLIBC_PTAG}.${MUSL_PTAG}.${MACOS_PTAG}.whl
+        sudo mv dist/backend_ai_krunner_static_gnu-${PKGVER}-*.whl \
+                dist/backend_ai_krunner_static_gnu-${PKGVER}-py3-none-${GLIBC_PTAG}.${MUSL_PTAG}.${MACOS_PTAG}.whl
         ls -lh dist
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: dist-${{ matrix.os }}-${{ matrix.pyver }}-${{ matrix.arch }}
+        name: dist-${{ matrix.platform.os }}-${{ matrix.pyver }}-${{ matrix.platform.arch }}
         path: dist
+    - name: Minimize uv cache
+      run: uv cache prune --ci
 
 
   deploy-to-pypi:
