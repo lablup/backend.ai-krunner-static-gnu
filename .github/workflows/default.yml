@@ -71,9 +71,11 @@ jobs:
       run: |
         sudo apt install -y xz-utils
         uv sync
-    - name: Build wheel
+    - name: Build volume contents
       run: |
         uv run python scripts/build.py --arch ${{ matrix.platform.arch }}
+    - name: Build wheel
+      run: |
         sed -i 's/ARCH/${{ matrix.platform.arch }}/g' MANIFEST.in
         uv build --wheel
     - name: Apply platform tags to wheel
